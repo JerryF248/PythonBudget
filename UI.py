@@ -5,6 +5,8 @@ from expense import Expense
 
 myFont=("sans-seriff", 16)
 
+data = Database(db="expenses.db")
+
 class AppUI():
     def __init__(self, root):
 
@@ -26,13 +28,21 @@ class AppUI():
 
         # Validate input from user
         def validate_input():
-            if(expenseName.get().isnumeric()):
-                nameEntry.configure(border_color = "gray")
-                print(expenseName.get())
-            else:
+            if(expenseCost.get().isnumeric() == False or expenseCost.get() == ""):
+                costEntry.configure(border_color = "red")
+            elif(expenseName.get() == ""):
                 nameEntry.configure(border_color = "red")
-                print("not number")
-                print(expenseName.get())
+            elif(expenseCategory.get() == ""):
+                categoryEntry.configure(border_color = "red")
+            elif(expenseDate.get() == ""):
+                dateEntry.configure(border_color = "red")
+            else:
+                costEntry.configure(border_color = "gray")
+                nameEntry.configure(border_color = "gray")
+                categoryEntry.configure(border_color = "gray")
+                dateEntry.configure(border_color = "gray")
+                newExpense = Expense(expenseName.get(), expenseCost.get(), expenseCategory.get(), expenseDate.get())
+                data.insertExpense(newExpense)
 
         # Draw expense name label to screen
         nameLabel = customtkinter.CTkLabel(master = root, font=myFont, text= "Enter expense name")
