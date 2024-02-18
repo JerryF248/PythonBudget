@@ -1,13 +1,28 @@
-from db import *
+import sqlite3
 
-class backend:
+# This database class will execute all of our sqlite commands
 
-    def __init__(self, database):
-        self.database = Database(database)
-
-    # Input: Using the calendar library, our dates are given in "mm/dd/yy", or "m/d/yy"
-    # Output: A comparable date number "yymmdd"
-    def parseDate(self, dateString):
-        dateList = dateString.split('/')
-        return f"{dateList[2].rjust(2, '0')}{dateList[0].rjust(2, '0')}{dateList[1].rjust(2, '0')}"
+class Database:
+    def __init__(self, db):
+        self.conn = sqlite3.conenct(db)
+        self.cur = self.conn.cursor()
+        self.cur.execute(
+            "CREATE TABLE IF NOT EXISTS expenses (item_name text, item_price float, item_category text, purchase_date date)")
+        self.conn.commit()
     
+    def getExpense(self, query):
+        self.cur.execute(query)
+        rows = self.cur.fetchall()
+        return rows
+    
+    def insertExpense(self, item_name, item_price, item_category, purchase_date):
+        self.cur.execute("INSERT INTO expenses VALUES (?, ?, ?, ?)", item_name, item_price, item_category, purchase_date)
+        self.conn.commit()
+
+    def removeExpense(self, eid):
+        self.cur.execute("DELETE FROM expenses WHERE rowid=?", (eid, ))
+        self.conn.commit()
+
+    def updateExpense(self, item_name, item_price, item_category, purchase_date, eid):
+        self.cur.execute("UPDATE expenses SET item_name = ?, item_price = ?, item_category = ?, purchase_date = ? WHERE rowid = ?)", item_name, item_price, item_category, purchase_date, eid)
+        self.conn.commit()

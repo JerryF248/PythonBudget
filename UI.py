@@ -1,5 +1,7 @@
 import customtkinter
 import tkinter 
+from backend import *
+from expense import Expense
 
 myFont=("sans-seriff", 16)
 
@@ -26,7 +28,7 @@ class AppUI():
         def validate_input():
             if(expenseName.get().isnumeric()):
                 nameEntry.configure(border_color = "gray")
-                print("number")
+                print(expenseName.get())
             else:
                 nameEntry.configure(border_color = "red")
                 print("not number")
