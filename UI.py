@@ -2,8 +2,12 @@ import customtkinter
 import tkinter 
 from backend import *
 from expense import Expense
+import datetime
+from tkcalendar import Calendar
 
 myFont=("sans-seriff", 16)
+
+current_time = datetime.datetime.now()
 
 categories = ["Rent", "Utilities/Insurance", "Food", "Self-Care", "Dining Out",
               "Transportation", "Medicine", "Vacation", "Debt", 
@@ -40,12 +44,12 @@ class AppUI():
             elif(categoryMenu.get() == ""):
                 categoryMenu.configure(border_color = "red")
             elif(expenseDate.get() == ""):
-                dateEntry.configure(border_color = "red")
+                dateButton.configure(border_color = "red")
             else:
                 costEntry.configure(border_color = "gray")
                 nameEntry.configure(border_color = "gray")
                 categoryMenu.configure(border_color = "gray")
-                dateEntry.configure(border_color = "gray")
+                dateButton.configure(border_color = "gray")
                 newExpense = Expense(expenseName.get(), expenseCost.get(), categoryMenu.get(), expenseDate.get())
                 data.insertExpense(newExpense)
 
@@ -79,10 +83,23 @@ class AppUI():
         dateLabel = customtkinter.CTkLabel(master = root, font=myFont, text= "Enter expense date")
         dateLabel.grid(row = 3, column = 0)
 
+        def showCalendar():
+            calendarWindow = tkinter.Toplevel(root)
+            cal = Calendar(master = calendarWindow, selectmode = 'day', year = current_time.year)
+            cal.grid(row= 1, column = 1, sticky="nswe")
+
+            def saveDate():
+                calendarWindow.destroy()
+                dateButton.configure(text = cal.get_date())
+                expenseDate.set(cal.get_date())
+            selectButton = customtkinter.CTkButton(calendarWindow, text = "Select Date", command = saveDate)
+            selectButton.grid(row = 2, column =1)
+            
         # Draw expense date entry to screen
         expenseDate = customtkinter.StringVar()
-        dateEntry = customtkinter.CTkEntry(master = root, font=myFont, textvariable= expenseDate)
-        dateEntry.grid(row = 3, column = 1)
+        expenseDate.set(current_time.now().strftime("%m/%d/%Y"))
+        dateButton = customtkinter.CTkButton(master = root, font=myFont, textvariable= expenseDate, command=showCalendar)
+        dateButton.grid(row = 3, column = 1)
 
         # Enter Button
         button = customtkinter.CTkButton(master= root, font=myFont, text="Enter", command=validate_input)
