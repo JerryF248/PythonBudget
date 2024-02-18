@@ -5,6 +5,11 @@ from expense import Expense
 
 myFont=("sans-seriff", 16)
 
+categories = ["Rent", "Utilities/Insurance", "Food", "Self-Care", "Dining Out",
+              "Transportation", "Medicine", "Vacation", "Debt", 
+              "Cleaning" ,"Entertainment", "Clothes", "Dog Needs", 
+              "Dog Needs", "Dog Wants", "Misc"]
+
 data = Database(db="expenses.db")
 
 class AppUI():
@@ -32,16 +37,16 @@ class AppUI():
                 costEntry.configure(border_color = "red")
             elif(expenseName.get() == ""):
                 nameEntry.configure(border_color = "red")
-            elif(expenseCategory.get() == ""):
-                categoryEntry.configure(border_color = "red")
+            elif(categoryMenu.get() == ""):
+                categoryMenu.configure(border_color = "red")
             elif(expenseDate.get() == ""):
                 dateEntry.configure(border_color = "red")
             else:
                 costEntry.configure(border_color = "gray")
                 nameEntry.configure(border_color = "gray")
-                categoryEntry.configure(border_color = "gray")
+                categoryMenu.configure(border_color = "gray")
                 dateEntry.configure(border_color = "gray")
-                newExpense = Expense(expenseName.get(), expenseCost.get(), expenseCategory.get(), expenseDate.get())
+                newExpense = Expense(expenseName.get(), expenseCost.get(), categoryMenu.get(), expenseDate.get())
                 data.insertExpense(newExpense)
 
         # Draw expense name label to screen
@@ -67,9 +72,8 @@ class AppUI():
         categoryLabel.grid(row = 2, column = 0)
 
         # Draw expense category entry to screen
-        expenseCategory = customtkinter.StringVar()
-        categoryEntry = customtkinter.CTkEntry(master = root, font=myFont, textvariable= expenseCategory)
-        categoryEntry.grid(row = 2, column = 1)
+        categoryMenu = customtkinter.CTkOptionMenu(master = root, font=myFont, values = categories)
+        categoryMenu.grid(row = 2, column = 1)
 
         # Draw expense date label to screen
         dateLabel = customtkinter.CTkLabel(master = root, font=myFont, text= "Enter expense date")
